@@ -3,8 +3,6 @@ var update_history = [];
 
 var config = require('../config')();
 
-
-
 var COMMANDS = {
     'git': 'git clone {DOWNLOAD_PATH}',
     'rm_exists': 'rm -rf {DIR_PATH}',
@@ -13,8 +11,7 @@ var COMMANDS = {
     'cp': 'cp -rf ./{DIR_PATH}/* ./public/'
 };
 
-var GITNAMEOPTION = ['oschina', 'github', 'coding'];
-
+var GITNAMEOPTION = ['oschina', 'coding'];
 
 function update(str, res) {
     var hookInfo = {};
@@ -29,32 +26,36 @@ function update(str, res) {
         }
     }
 
-    if (!hookInfo.repository) {
-        res.send('ok');
-        console.log('验证');
-        return;
-    }
-
-
     var answer = {};
-    answer.url = hookInfo.repository.https_url;
+
     // https://git.oschina.net/xinshangshangxin/ngMusic.git
     // https://github.com/xinshangshangxin/ngMusic.git
     // https://git.coding.net/xinshangshangxin/DaoCloudBlog.git
 
+    // coding
+    if (hookInfo.repository) {
+        answer.url = hookInfo.repository.https_url;
+        answer.token = hookInfo.token;
+    }// gitoschina
+    else if (hookInfo.push_data && hookInfo.push_data.repository) {
+        answer.url = hookInfo.push_data.repository.homepage.replace(/^http/, 'https');
+        answer.token = hookInfo.password;
+    }
+    else {
+        console.log(hookInfo.push_data);
+        res.send('验证回复');
+        console.log('验证');
+        return;
+    }
+
     var gitName = '';
     for (var i = 0; i < GITNAMEOPTION.length; i++) {
-        if (new Regex(GITNAMEOPTION[i] + '\\.').test(answer.url) ) {
+        if (new RegExp('[\\/\\.]' + GITNAMEOPTION[i] + '\\.').test(answer.url)) {
             gitName = GITNAMEOPTION[i];
             break;
         }
     }
-
-    console.log(gitName);
-
-    answer.token = exactToken(hookInfo, gitName || 'coding');
     answer.hookInfo = hookInfo;
-
 
     var isnext = saveIntoHistotry(answer);
     if (!isnext) {
@@ -130,11 +131,14 @@ function execCmd(cmd, callback) {
 
 
 function exactToken(obj, gitname) {
-    if (gitname === 'coding') {
-        return obj.token;
+    if (gitname === 'github') {
+
+    }
+    else if (gitname === 'oschina') {
+        return obj.password;
     }
     else {
-        return obj.password;
+        return obj.token;
     }
 }
 
@@ -154,7 +158,6 @@ function generateHistory(args) {
     history.info = args.hookInfo;
     return history;
 }
-
 
 exports.update = update;
 exports.getUpdateHistory = function() {
