@@ -1,13 +1,8 @@
 var exec = require('child_process').exec;
 var update_history = [];
 
+var config = require('../config')();
 
-var config = {
-    UPLOAD_PATH: 'shang/update', // 暂时未启用
-    UPLOAD_HISTORY: 'shang/uploadhistory',  // 暂时未启用
-    WEBHOOK_TOKEN: process.env.WEBHOOK_TOKEN || '4test',
-    DOWNLOAD_PATH: {}
-};
 
 //https://github.com/xinshangshangxin/ngMusic.git
 
