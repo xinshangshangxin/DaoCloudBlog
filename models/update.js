@@ -141,17 +141,17 @@ function execCmdStack(cmds, callback) {
 
 function execCmd(cmd) {
     var defered = q.defer();
-    console.log('Executing command: ', cmd);
+    //console.log('Executing command: ', cmd);
     exec(cmd, function(error, stdout, stderr) {
         //console.error('stdout: ' + stdout);
         //console.error('stderr: ' + stderr);
         if (error !== null) {
             defered.reject(error);
-            console.error('exec error: ' + error);
+            console.error(cmd + ' \nexec error: ' + error);
         }
         else {
             defered.resolve('success');
-            console.log('success');
+            console.log('success' + cmd);
         }
     });
 
