@@ -4,7 +4,6 @@ var update_history = [];
 var config = require('../config')();
 
 
-//https://github.com/xinshangshangxin/ngMusic.git
 
 var COMMANDS = {
     'git': 'git clone {DOWNLOAD_PATH}',
@@ -13,6 +12,8 @@ var COMMANDS = {
     'mkdri_public': 'mkdir public',
     'cp': 'cp -rf ./{DIR_PATH}/* ./public/'
 };
+
+var GITNAMEOPTION = ['oschina', 'github', 'coding'];
 
 
 function update(str, res) {
@@ -34,9 +35,24 @@ function update(str, res) {
         return;
     }
 
+
     var answer = {};
     answer.url = hookInfo.repository.https_url;
-    answer.token = exactToken(hookInfo, config.DOWNLOAD_PATH.git_name || 'coding');
+    // https://git.oschina.net/xinshangshangxin/ngMusic.git
+    // https://github.com/xinshangshangxin/ngMusic.git
+    // https://git.coding.net/xinshangshangxin/DaoCloudBlog.git
+
+    var gitName = '';
+    for (var i = 0; i < GITNAMEOPTION.length; i++) {
+        if (new Regex(GITNAMEOPTION[i] + '\\.').test(answer.url) ) {
+            gitName = GITNAMEOPTION[i];
+            break;
+        }
+    }
+
+    console.log(gitName);
+
+    answer.token = exactToken(hookInfo, gitName || 'coding');
     answer.hookInfo = hookInfo;
 
 
