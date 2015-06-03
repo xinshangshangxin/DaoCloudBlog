@@ -1,3 +1,4 @@
+var q = require('q');
 var exec = require('child_process').exec;
 var update_history = [];
 
@@ -89,57 +90,72 @@ function update(str, res) {
     }
 }
 
-
 function execCmdStack(cmds, callback) {
-    var cmd = cmds.shift();
-    if (cmd) {
-        if (typeof cmd === 'function') {
-            try {
-                cmd();
-            }
-            catch (e) {
-                console.log('cmd error', e);
-            }
-        }
-        else {
-            execCmd(cmd, function(error) {
-                if (!error) {
-                    execCmdStack(cmds, callback);
-                }
-                if (cmds.length === 0) {
-                    callback && callback(error);
-                }
-            });
-        }
-    }
-    else {
-        callback && callback();
-    }
+
+    execCmd(cmds[0])
+        .then(function() {
+            return execCmd(cmds[1])
+        })
+        .then(function() {
+            return execCmd(cmds[2])
+        })
+        .then(function() {
+            return execCmd(cmds[3])
+        })
+        .then(function() {
+            return execCmd(cmds[4])
+        })
+        .then(function() {
+            callback && callback('success');
+        })
+        .catch(function(e) {
+            console.log(e);
+            callback && callback(e);
+        });
+
+    //var cmd = cmds.shift();
+    //if (cmd) {
+    //    if (typeof cmd === 'function') {
+    //        try {
+    //            cmd();
+    //        }
+    //        catch (e) {
+    //            console.log('cmd error', e);
+    //        }
+    //    }
+    //    else {
+    //        execCmd(cmd, function(error) {
+    //            if (!error) {
+    //                execCmdStack(cmds, callback);
+    //            }
+    //            if (cmds.length === 0) {
+    //                callback && callback(error);
+    //            }
+    //        });
+    //    }
+    //}
+    //else {
+    //    callback && callback();
+    //}
 }
 
-function execCmd(cmd, callback) {
+function execCmd(cmd) {
+    var defered = q.defer();
     console.log('Executing command: ', cmd);
-    return child = exec(cmd, function(error, stdout, stderr) {
-        console.error('stdout: ' + stdout);
-        console.error('stderr: ' + stderr);
+    exec(cmd, function(error, stdout, stderr) {
+        //console.error('stdout: ' + stdout);
+        //console.error('stderr: ' + stderr);
         if (error !== null) {
+            defered.reject(error);
             console.error('exec error: ' + error);
         }
-        callback(error);
+        else {
+            defered.resolve('success');
+            console.log('success');
+        }
     });
-}
 
-
-function exactToken(obj, gitname) {
-    if (gitname === 'github') {
-
-    }
-    else if (gitname === 'oschina') {
-        return obj.password;
-    }
-    else {
-        return obj.token;
-    }
+    return defered.promise;
 }
 
 function saveIntoHistotry(args) {

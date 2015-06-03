@@ -11,7 +11,7 @@ router
     })
     .get(config.UPLOAD_HISTORY, function(req, res) {
         var token = req.query.token;
-        
+
         if (token == config.WEBHOOK_TOKEN) {
             res.send(JSON.stringify(update.getUpdateHistory()));
         }
@@ -32,7 +32,6 @@ router
             // req.on('end', function() {
             //     update.update(str, res);
             // });
-
             res.send('ok');
             console.log('验证');
         }
