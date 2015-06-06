@@ -11,4 +11,4 @@ RUN git config --global http.sslVerify false \
 
 EXPOSE 1337
 
-CMD [ "node","app.js"]
+CMD ["node","app.js"]

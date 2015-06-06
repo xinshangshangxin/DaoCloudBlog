@@ -5,7 +5,7 @@ var update_history = [];
 var config = require('../config')();
 
 var COMMANDS = {
-    'git': 'git clone {DOWNLOAD_PATH}',
+    'git': 'git clone -b {GIT_BRANCH} {DOWNLOAD_PATH}',
     'rm_exists': 'rm -rf {DIR_PATH}',
     'rm_public': 'rm -rf ./public',
     'mkdri_public': 'mkdir public',
@@ -71,7 +71,7 @@ function update(str, res) {
 
         var cmds = [
             COMMANDS.rm_exists.replace('{DIR_PATH}', dirName),
-            COMMANDS.git.replace('{DOWNLOAD_PATH}', answer.url),
+            COMMANDS.git.replace('{DOWNLOAD_PATH}', answer.url).replace('{GIT_BRANCH}', config.GIT_BRANCH || 'master'),
             COMMANDS.rm_public,
             COMMANDS.mkdri_public,
             COMMANDS.cp.replace('{DIR_PATH}', dirName)

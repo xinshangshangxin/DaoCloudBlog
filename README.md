@@ -4,9 +4,8 @@
 
 ## 使用说明
 - 支持coding和gitoschina的WebHook
-- blog的项目必须是静态文件并且在master分支下[其它分支待完善]
+- git clone 的分支必须是静态文件,包括 `index.html` (即hexo生成的文件)
 - 配置 `config.js`
 - 部署到 DaoCloud
 - 在coding/gitoschina 的项目中配置 WebHook
-
 
