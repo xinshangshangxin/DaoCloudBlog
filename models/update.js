@@ -151,7 +151,7 @@ function execCmd(cmd) {
         }
         else {
             defered.resolve('success');
-            console.log('success' + cmd);
+            console.log('success    ' + cmd);
         }
     });
 

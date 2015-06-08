@@ -4,7 +4,6 @@ var router = express.Router();
 var update = require('../models/update');
 var config = require('../config')();
 
-// 更新日志
 router
     .get('/', function(req, res) {
         res.render('../public/index.html');
@@ -24,14 +23,6 @@ router
             update.update(req.body, res);
         }
         else {
-            // 本地测试使用
-            // var str = '';
-            // req.on('data', function(chunk) {
-            //     str += chunk;
-            // });
-            // req.on('end', function() {
-            //     update.update(str, res);
-            // });
             res.send('ok');
             console.log('验证');
         }
