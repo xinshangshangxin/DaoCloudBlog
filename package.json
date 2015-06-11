@@ -2,7 +2,7 @@
   "name": "DockerBlog",
   "version": "1.0.4",
   "scripts": {
-    "start": "node app.js"
+    "start": "pm2 start app.js"
   },
   "dependencies": {
     "body-parser": "~1.12.4",
