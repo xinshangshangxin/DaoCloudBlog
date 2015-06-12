@@ -14,3 +14,5 @@ force:
 	git push -u origin master --force
 clean:
 	rm -rf .git
+start:
+	pm2 start app.js --no-daemon
